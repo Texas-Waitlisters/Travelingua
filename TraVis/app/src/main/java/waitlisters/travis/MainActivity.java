@@ -1,5 +1,8 @@
 package waitlisters.travis;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -19,6 +22,12 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.prefs.Preferences;
+
+import static junit.framework.Assert.assertTrue;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -30,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private ArrayList<HistoryItem> history;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -40,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HistoryItem h1 = new HistoryItem("ASD", 0);
+        h1.save();
+
+        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,16 +66,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
     }
+
 
 
     @Override
