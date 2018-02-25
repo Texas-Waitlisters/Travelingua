@@ -39,11 +39,13 @@ public class TranslationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         term = (TextView) findViewById(R.id.term);
+        translated_text = (TextView) findViewById(R.id.translated_term);
         language_selector = (Spinner) findViewById(R.id.language_selector);
         translated_text = (TextView) findViewById(R.id.translated_text);
         suggested = (Button) findViewById(R.id.suggestions);
 
         term.setText(getIntent().getStringExtra("TERM"));
+        translated_text.setText(googlAutocompleteParser.translateText(getIntent().getStringExtra("TERM")));
         boolean newItem = getIntent().getBooleanExtra("NEW", true);
         if (newItem) {
             HistoryItem item = new HistoryItem(term.getText().toString(), new Date().getTime());
