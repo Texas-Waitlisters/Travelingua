@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -54,7 +55,12 @@ public class TranslationActivity extends AppCompatActivity {
         }
         String[] stuff = googlAutocompleteParser.getTheStuff(getIntent().getStringExtra("TERM"));
 
-        FoundThingsAdapter adapter = new FoundThingsAdapter();
+        ListView listview = (ListView) this.findViewById(R.id.association_list);
+        AssociationAdapter adapter = new AssociationAdapter(this, stuff, "de");
+        listview.setAdapter(adapter);
+
+
+
         language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
         //set translated text to something
         //make button take you to google search
