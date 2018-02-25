@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.orm.SugarRecord;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
@@ -49,10 +51,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        HistoryItem h1 = new HistoryItem("ASD", 0);
-        h1.save();
-
-        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
+        history = new ArrayList<HistoryItem>();
+        HistoryItem h1 = new HistoryItem("dsafas", 0);
+        HistoryItem h2 = new HistoryItem("dsa", 0);
+        history.add(h1);
+        history.add(h2);
+        SugarRecord.saveInTx(history);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
