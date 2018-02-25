@@ -1,11 +1,8 @@
 package waitlisters.travis;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -19,7 +16,7 @@ public class TranslationActivity extends AppCompatActivity {
 
     private TextView term;
     private Spinner language_selector;
-    private TextView translated_text;
+    private TextView translated_term;
     private Button suggested;
 
 
@@ -42,26 +39,28 @@ public class TranslationActivity extends AppCompatActivity {
         term = (TextView) findViewById(R.id.term);
         TextView translated_term = (TextView) findViewById(R.id.translated_term);
         language_selector = (Spinner) findViewById(R.id.language_selector);
-        translated_text = (TextView) findViewById(R.id.translated_text);
-        suggested = (Button) findViewById(R.id.suggestions);
+        this.translated_term = (TextView) findViewById(R.id.translated_term);
 
         term.setText(getIntent().getStringExtra("TERM"));
         googlAutocompleteParser trans = new googlAutocompleteParser();
-        trans.translateText(getIntent().getStringExtra("TERM"),translated_term, "de");
+        trans.translateText(getIntent().getStringExtra("TERM"),translated_term, "ru");
         boolean newItem = getIntent().getBooleanExtra("NEW", true);
         if (newItem) {
             HistoryItem item = new HistoryItem(term.getText().toString(), new Date().getTime());
             item.save();
         }
-        String[] stuff = googlAutocompleteParser.getTheStuff(getIntent().getStringExtra("TERM"));
 
         ListView listview = (ListView) this.findViewById(R.id.association_list);
-        AssociationAdapter adapter = new AssociationAdapter(this, stuff, "de");
-        listview.setAdapter(adapter);
 
+        try{
+            googlAutocompleteParser.urlReader(getIntent().getStringExtra("TERM"), listview, this);
+        }
+        catch(Exception e){}
 
-
-        language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
+        String country = getIntent().getStringExtra("COUNTRY");
+        TextView tv = (TextView) findViewById(R.id.language);
+        tv.setText(country);
+        //language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
         //set translated text to something
         //make button take you to google search
     }

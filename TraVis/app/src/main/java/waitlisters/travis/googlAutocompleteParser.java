@@ -1,7 +1,9 @@
 package waitlisters.travis;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.cloud.translate.Translate;
@@ -10,6 +12,7 @@ import com.google.cloud.translate.Translation;
 
 import java.net.*;
 import java.io.*;
+import java.util.Arrays;
 
 public class googlAutocompleteParser {
 
@@ -45,52 +48,6 @@ public class googlAutocompleteParser {
 			}
 		}.execute();
 	}
-
-	public static void main(String[] args) throws Exception {
-		final String urlBeg = "http://suggestqueries.google.com/complete/search?client=firefox&q=\""; // Beginning of Google AutoComplete query URL
-		final String urlEnd = "\""; // End of Google AutoComplete query URL
-		String term = "bus"; // IN FUTURE SHOULD BE A PARAMETER GIVEN BY OBJECT RECOGNITION 
-		term = webSpaceOptim(term); // Checks for spaces in search term string and accounts for them avoiding 404s since web doesn't like spaces
-
-		// Builds newURL with term as query for Google AutoComplete
-		String newURL = urlCreator(urlBeg, urlEnd, term);
-		// TESTING THAT URL IS ACCURATE
-		//System.out.println("Your URL is: " + newURL);
-
-		//		urlReader(newURL, term);
-		String inputLine = urlReader(newURL, term); // String with Google AutoComplete results
-		String[] queries = inputLine.split("\",\""); // Takes individual AutoComplete results and makes them elements in an array
-		// DEBUGGING
-//		System.out.println(Arrays.toString(queries)); // Prints the queries array to confirm accurateness
-		int arraySize = queries.length;
-		// DEBUGGING
-//				for (int i = 0; i < arraySize; i++) {
-//					System.out.println(queries[i]);
-//				}
-	}
-
-	public static String[] getTheStuff(String term)
-	{
-		final String urlBeg = "http://suggestqueries.google.com/complete/search?client=firefox&q=\""; // Beginning of Google AutoComplete query URL
-		final String urlEnd = "\""; // End of Google AutoComplete query URL
-		term = webSpaceOptim(term); // Checks for spaces in search term string and accounts for them avoiding 404s since web doesn't like spaces
-
-		// Builds newURL with term as query for Google AutoComplete
-		String newURL = urlCreator(urlBeg, urlEnd, term);
-		// TESTING THAT URL IS ACCURATE
-		//System.out.println("Your URL is: " + newURL);
-
-		//		urlReader(newURL, term);
-		String inputLine = null;
-		try {
-			inputLine = urlReader(newURL, term); // String with Google AutoComplete results
-		} catch(Exception e){}
-		String[] queries = inputLine.split("\",\""); // Takes individual AutoComplete results and makes them elements in an array
-		// DEBUGGING
-//		System.out.println(Arrays.toString(queries)); // Prints the queries array to confirm accurateness
-		int arraySize = queries.length;
-		return queries;
-	}
 	
 	// Method that replaces spaces in the search term with the web friendly characters for spaces
 	public static String webSpaceOptim(String term) {
@@ -105,35 +62,53 @@ public class googlAutocompleteParser {
 
 	
 	// Method that creates URL based on search term
-	public static String urlCreator(String urlBeg, String urlEnd, String term) {
-		String newURL = urlBeg + term + urlEnd; // URL creation (concatenation)
-		return newURL;
+	public static String urlCreator(String term) {
+		final String urlBeg = "http://suggestqueries.google.com/complete/search?client=firefox&q=\""; // Beginning of Google AutoComplete query URL
+		final String urlEnd = "\""; // End of Google AutoComplete query URL
+		term = webSpaceOptim(term); // Checks for spaces in search term string and accounts for them avoiding 404s since web doesn't like spaces
+
+		return urlBeg + term + urlEnd;
 	}
 
 	
 	
 	// Method that returns Google Auto
-	public static String urlReader(String newURL, String term) throws IOException {
-		//	public static void urlReader(String newURL, String term) throws IOException {
-		URL url = null;
-		// Try catch exception for a newURL
-		try {
-			url = new URL(newURL);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+	public static void urlReader(final String term, final ListView lv, final Context context) throws IOException {
 
-		// Initializes string variables
-		String inputLine = "";
-		String inputLine1 = "";
-		int termLength = term.length(); // checks length of search term
-		int charsToRemove = 10 + termLength; // calculates how many characters need to be removed from the beginning of the string
-		while ((inputLine = in.readLine()) != null)
-			inputLine1 = inputLine.substring(charsToRemove, inputLine.length() - 3); // declares new string with relevant data
-		in.close();
-		return inputLine1;
+		new AsyncTask<Object, Void, String>() {
+			@Override
+			protected String doInBackground(Object... params) {
+				URL url = null;
+				String newURL = urlCreator(term);
+				BufferedReader in = null;
+				String inputLine1 = "";
+				try {
+					url = new URL(newURL);
+					in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+					String inputLine = "";
+					int termLength = term.length(); // checks length of search term
+					int charsToRemove = 10 + termLength; // calculates how many characters need to be removed from the beginning of the string
+					while ((inputLine = in.readLine()) != null)
+						inputLine1 = inputLine.substring(charsToRemove, inputLine.length() - 3); // declares new string with relevant data
+					in.close();
+				}
+				catch(Exception e){}
+				return inputLine1;
+			}
+			protected void onPostExecute(String result) {
+				String[] queries;
+				if(result!=null)
+					queries = result.split("\",\""); // Takes individual AutoComplete results and makes them elements in an array
+				else
+					queries = new String[0];
+				String[] arr = new String[Math.max(10, queries.length)];
+				for(int i = 0; i < arr.length && i < queries.length; i++)
+					arr[i] = queries[i];
+				AssociationAdapter adapter = new AssociationAdapter(context, arr, "ru");
+				lv.setAdapter(adapter);
+			}
+		}.execute();
 	}
 
 }
