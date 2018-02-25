@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +73,9 @@ public class CameraTab extends Fragment {
     private TextView mImageDetails;
     private ImageButton mMainImage;
 
+
+    private View rootView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +89,7 @@ public class CameraTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_camera_tab, container, false);
+        rootView = inflater.inflate(R.layout.fragment_camera_tab, container, false);
         mImageDetails = (TextView) rootView.findViewById(R.id.image_details);
         mMainImage = (ImageButton) rootView.findViewById(R.id.main_image);
 
@@ -331,8 +336,21 @@ public class CameraTab extends Fragment {
             }
 
             protected void onPostExecute(String result) {
-                mImageDetails.setText(result);
+                mImageDetails.setText("");
+                String[] tmp = result.split("\n");
+                String[][] arr = new String[tmp.length][];
+                for(int i = 0; i < tmp.length; i++)
+                    arr[i] = tmp[i].split(" ");
+//                mImageDetails.setText(result);
+                ListView listview = (ListView) rootView.findViewById(R.id.foundThingsList);
+                FoundThingsAdapter adapter = new FoundThingsAdapter(rootView.getContext(), arr);
+                listview.setAdapter(adapter);
+                FoundThingsAdapter.setListViewHeightBasedOnChildren(listview);
+
+
             }
+
+
         }.execute();
     }
 
@@ -357,8 +375,7 @@ public class CameraTab extends Fragment {
     }
 
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
-        String message = "I found these things:\n\n";
-
+    String message="";
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         if (labels != null) {
             for (EntityAnnotation label : labels) {
@@ -366,7 +383,7 @@ public class CameraTab extends Fragment {
                 message += "\n";
             }
         } else {
-            message += "nothing";
+            //message += "nothing";
         }
 
         return message;

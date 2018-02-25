@@ -1,7 +1,9 @@
 package waitlisters.travis;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -25,17 +27,28 @@ public class HistoryTab extends Fragment {
     private ArrayList<HistoryItem> history;
     private ArrayAdapter adapter;
     private ListView listview;
+    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_history_tab, container, false);
+        rootView = inflater.inflate(R.layout.fragment_history_tab, container, false);
 
         history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
 
         listview = (ListView) rootView.findViewById(R.id.historyList);
-        HistoryItemAdapter adapter = new HistoryItemAdapter(this.getContext(), history);
+        adapter = new HistoryItemAdapter(this.getContext(), history);
         listview.setAdapter(adapter);
+
+        FloatingActionButton delete = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
+        delete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                HistoryItem.deleteAll(HistoryItem.class);
+                onResume();
+            }
+        });
 
 //        populateListView();
 
@@ -44,7 +57,20 @@ public class HistoryTab extends Fragment {
         return rootView;
     }
 
-//    private void populateListView() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
+
+        listview = (ListView) rootView.findViewById(R.id.historyList);
+        adapter = new HistoryItemAdapter(this.getContext(), history);
+        listview.setAdapter(adapter);
+//        if (adapter != null) {
+//        adapter.notifyDataSetChanged();
+//        listview.setAdapter(adapter);}
+    }
+
+    //    private void populateListView() {
 //        ArrayAdapter<HistoryItem> adapter = new ArrayAdapter<HistoryItem>(getActivity(), R.layout.list_row, history);
 //        listview.setAdapter(adapter);
 //
@@ -65,12 +91,23 @@ public class HistoryTab extends Fragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_row, parent, false);
             }
-            TextView term = (TextView) convertView.findViewById(R.id.term);
+            final TextView term = (TextView) convertView.findViewById(R.id.term);
             TextView time = (TextView) convertView.findViewById(R.id.time);
             term.setText(history.get(position).getValue());
             Date date = new Date(history.get(position).getTime());
             time.setText(date.getMonth() + "/" + date.getDate() + "/" + date.getYear() + " " + date.getHours() + ":" +
                     date.getMinutes() + ":" + date.getSeconds());
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), TranslationActivity.class);
+                    intent.putExtra("TERM", term.getText().toString());
+                    intent.putExtra("LANGUAGE_SELECTED", "English"); //TODO: fix this lang
+                    intent.putExtra("NEW", false);
+                    getContext().startActivity(intent);
+                }
+            });
 
             return convertView;
         }

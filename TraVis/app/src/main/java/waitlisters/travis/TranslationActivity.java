@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
+
 public class TranslationActivity extends AppCompatActivity {
 
     private TextView term;
@@ -42,6 +44,11 @@ public class TranslationActivity extends AppCompatActivity {
         suggested = (Button) findViewById(R.id.suggestions);
 
         term.setText(getIntent().getStringExtra("TERM"));
+        boolean newItem = getIntent().getBooleanExtra("NEW", true);
+        if (newItem) {
+            HistoryItem item = new HistoryItem(term.getText().toString(), new Date().getTime());
+            item.save();
+        }
         language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
         //set translated text to something
         //make button take you to google search
