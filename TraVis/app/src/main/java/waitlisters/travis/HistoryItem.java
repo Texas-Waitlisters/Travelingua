@@ -12,6 +12,9 @@ public class HistoryItem extends SugarRecord {
     private long time;
     private String value;
 
+    public HistoryItem() {
+
+    }
 
     public HistoryItem(String value, long date) {
         this.time = date;

@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.orm.SugarRecord;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import static junit.framework.Assert.assertTrue;
@@ -41,22 +43,21 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ArrayList<HistoryItem> history;
+    private List<HistoryItem> history;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        history = new ArrayList<HistoryItem>();
-        HistoryItem h1 = new HistoryItem("dsafas", 0);
-        HistoryItem h2 = new HistoryItem("dsa", 0);
-        history.add(h1);
-        history.add(h2);
+        history = HistoryItem.listAll(HistoryItem.class);
+        Log.i(TAG, history.toString());
+
         SugarRecord.saveInTx(history);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

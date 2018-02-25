@@ -70,7 +70,6 @@ public class CameraTab extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getActivity().setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
