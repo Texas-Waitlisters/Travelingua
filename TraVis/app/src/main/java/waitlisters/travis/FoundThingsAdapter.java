@@ -40,12 +40,7 @@ public class FoundThingsAdapter extends ArrayAdapter<String[]> /* implements Goo
     Context context;
     String[][] foundThings;
 
-    private Location mLastLocation;
-    double lon;
-    double lat;
-    private ArrayList<String> permissions = new ArrayList<>();
-    private PermissionUtil permissionUtil;
-    private GoogleApiClient mGoogleApiClient;
+
 
     boolean isPermissionGranted;
 
@@ -62,7 +57,7 @@ public class FoundThingsAdapter extends ArrayAdapter<String[]> /* implements Goo
         }
         TextView rating = (TextView) convertView.findViewById(R.id.ratingTextview);
         TextView term = (TextView) convertView.findViewById(R.id.termTextview);
-        rating.setText((Math.floor(10000*Double.parseDouble(foundThings[position][0].substring(0,foundThings[position][0].length()-1))))/100+"%:");
+        rating.setText(/*(Math.floor(10000*Double.parseDouble(*/foundThings[position][0]/*.substring(0,foundThings[position][0].length()-1))))/100+"%:"*/);
         term.setText(foundThings[position][1]);
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -91,13 +86,13 @@ public class FoundThingsAdapter extends ArrayAdapter<String[]> /* implements Goo
         return convertView;
     }
 
-    private String getAddress() {
-        Address locationAddress = getAddress(lat, lon);
-        if (locationAddress != null) {
-            return locationAddress.getCountryName();
-        }
-        else return null;
-    }
+//    private String getAddress() {
+//        Address locationAddress = getAddress(lat, lon);
+//        if (locationAddress != null) {
+//            return locationAddress.getCountryName();
+//        }
+//        else return null;
+//    }
 
     private Address getAddress(double lat, double lon) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
