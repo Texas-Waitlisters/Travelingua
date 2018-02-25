@@ -1,29 +1,49 @@
 package waitlisters.travis;
 
-import com.google.cloud.translate.Detection;
-import com.google.cloud.translate.Language;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.TextView;
+
 import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.Translate.LanguageListOption;
-import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
-import com.google.common.collect.ImmutableList;
-import java.io.PrintStream;
 
 import java.net.*;
-import java.util.Arrays;
 import java.io.*;
 
 public class googlAutocompleteParser {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
+	public String translated;
+	private static String API_KEY = "AIzaSyBc324mdQ70KcUJExl5UUaQH6pNamE2hIA";
+
 	public static Translate createTranslateService() {
-		return TranslateOptions.newBuilder().setApiKey("bde9fad2828e985c46899720766bc43abdc893ac").build().getService();
+
+		return TranslateOptions.newBuilder().setApiKey(API_KEY).build().getService();
 	}
 
-	public static String translateText(String sourceText) {
-		com.google.cloud.translate.Translate translate = createTranslateService();
-		Translation translation = translate.translate(sourceText);
-		return translation.getTranslatedText();
+	public void translateText(final String sourceText, final TextView text, final String language) {
+		new AsyncTask<Object, Void, String>() {
+			@Override
+			protected String doInBackground(Object... params) {
+				try {
+					com.google.cloud.translate.Translate translate = TranslateOptions.newBuilder().setTargetLanguage(language).setApiKey("AIzaSyBc324mdQ70KcUJExl5UUaQH6pNamE2hIA").build().getService();
+					Log.i(TAG, translate.toString());
+					Translation translation = translate.translate(sourceText);
+					translated = translation.getTranslatedText();
+					Log.i(TAG, sourceText);
+					Log.i(TAG, translated);
+					return translation.getTranslatedText();
+				}
+				catch (Exception e){
+					Log.e(TAG, e.getStackTrace().toString());
+				}
+				return "";
+			}
+			protected void onPostExecute(String result) {
+				text.setText(result);
+			}
+		}.execute();
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -49,7 +69,7 @@ public class googlAutocompleteParser {
 //				}
 	}
 
-	public static String[] getTheStuff(String term) throws Exception
+	public static String[] getTheStuff(String term)
 	{
 		final String urlBeg = "http://suggestqueries.google.com/complete/search?client=firefox&q=\""; // Beginning of Google AutoComplete query URL
 		final String urlEnd = "\""; // End of Google AutoComplete query URL
@@ -61,7 +81,10 @@ public class googlAutocompleteParser {
 		//System.out.println("Your URL is: " + newURL);
 
 		//		urlReader(newURL, term);
-		String inputLine = urlReader(newURL, term); // String with Google AutoComplete results
+		String inputLine = null;
+		try {
+			inputLine = urlReader(newURL, term); // String with Google AutoComplete results
+		} catch(Exception e){}
 		String[] queries = inputLine.split("\",\""); // Takes individual AutoComplete results and makes them elements in an array
 		// DEBUGGING
 //		System.out.println(Arrays.toString(queries)); // Prints the queries array to confirm accurateness

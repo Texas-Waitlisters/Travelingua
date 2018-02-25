@@ -39,18 +39,22 @@ public class TranslationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         term = (TextView) findViewById(R.id.term);
-        translated_text = (TextView) findViewById(R.id.translated_term);
+        TextView translated_term = (TextView) findViewById(R.id.translated_term);
         language_selector = (Spinner) findViewById(R.id.language_selector);
         translated_text = (TextView) findViewById(R.id.translated_text);
         suggested = (Button) findViewById(R.id.suggestions);
 
         term.setText(getIntent().getStringExtra("TERM"));
-        translated_text.setText(googlAutocompleteParser.translateText(getIntent().getStringExtra("TERM")));
+        googlAutocompleteParser trans = new googlAutocompleteParser();
+        trans.translateText(getIntent().getStringExtra("TERM"),translated_term, "de");
         boolean newItem = getIntent().getBooleanExtra("NEW", true);
         if (newItem) {
             HistoryItem item = new HistoryItem(term.getText().toString(), new Date().getTime());
             item.save();
         }
+        String[] stuff = googlAutocompleteParser.getTheStuff(getIntent().getStringExtra("TERM"));
+
+        FoundThingsAdapter adapter = new FoundThingsAdapter();
         language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
         //set translated text to something
         //make button take you to google search

@@ -38,18 +38,17 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:27.0.0'
-    compile 'com.android.support:design:27.0.0'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:design:+'
 
-    compile 'com.google.api-client:google-api-client-android:1.20.0' exclude module: 'httpclient'
-    compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
+    compile 'com.google.api-client:google-api-client-android:+' exclude module: 'httpclient' exclude(group: 'com.google.guava', module: 'guava-jdk5')
+    compile 'com.google.http-client:google-http-client-gson:+' exclude module: 'httpclient' exclude(group: 'com.google.guava', module: 'guava-jdk5')
 
-    compile 'com.google.cloud:google-cloud-translate:1.14.0'
-    compile 'com.google.code.findbugs:jsr305'
+    compile ('com.google.cloud:google-cloud-translate:+') exclude module: 'httpclient' exclude(group: 'com.google.guava', module: 'guava-jdk5')
 
-    compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.apis:google-api-services-vision:+' exclude module: 'httpclient' exclude(group: 'com.google.guava', module: 'guava-jdk5')
+    compile 'com.android.support.constraint:constraint-layout:+'
 
-    compile 'com.github.satyan:sugar:1.5'
-    testCompile 'junit:junit:4.12'
+    compile 'com.github.satyan:sugar:+'
+    testCompile 'junit:junit:+'
 }
