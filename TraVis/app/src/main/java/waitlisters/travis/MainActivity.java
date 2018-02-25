@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HistoryItem h1 = new HistoryItem("ASD", 0);
-        h1.save();
+        //h1.save();
 
-        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
+        //history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
