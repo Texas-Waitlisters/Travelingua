@@ -73,7 +73,7 @@ public class googlAutocompleteParser {
 	
 	
 	// Method that returns Google Auto
-	public static void urlReader(final String term, final ListView lv, final Context context) throws IOException {
+	public static void urlReader(final String term, final ListView lv, final Context context, final String lang) throws IOException {
 
 		new AsyncTask<Object, Void, String>() {
 			@Override
@@ -105,7 +105,7 @@ public class googlAutocompleteParser {
 				String[] arr = new String[Math.max(10, queries.length)];
 				for(int i = 0; i < arr.length && i < queries.length; i++)
 					arr[i] = queries[i];
-				AssociationAdapter adapter = new AssociationAdapter(context, arr, "ru");
+				AssociationAdapter adapter = new AssociationAdapter(context, arr, lang);
 				lv.setAdapter(adapter);
 			}
 		}.execute();

@@ -10,6 +10,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -67,6 +72,38 @@ public class TranslationActivity extends AppCompatActivity implements GoogleApiC
         language_selector = (Spinner) findViewById(R.id.language_selector);
         this.translated_term = (TextView) findViewById(R.id.translated_term);
 
+        String[] arraySpinner = new String[] {
+                "Russia", "Germany", "Spain"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        language_selector.setAdapter(adapter);
+
+        language_selector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+                String lang = "";
+                    switch (language_selector.getItemAtPosition(pos).toString()) {
+                        case "Germany":
+                            lang = "de";
+                            break;
+                        case "Russia":
+                            lang = "ru";
+                            break;
+                        case "Spain":
+                            lang = "es";
+                            break;
+                    }
+                    updateLang(lang);
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+
 //        permissionUtil = new PermissionUtil(this);
 //
 //        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -82,9 +119,21 @@ public class TranslationActivity extends AppCompatActivity implements GoogleApiC
 //            ((TextView)findViewById(R.id.language)).setText(country);
 //        }
 
+        updateLang("ru");
+
+//        String country = getIntent().getStringExtra("COUNTRY");
+//        TextView tv = (TextView) findViewById(R.id.language);
+//        tv.setText(country);
+        //language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
+        //set translated text to something
+        //make button take you to google search
+    }
+
+    public void updateLang(String lang)
+    {
         term.setText(getIntent().getStringExtra("TERM"));
         googlAutocompleteParser trans = new googlAutocompleteParser();
-        trans.translateText(getIntent().getStringExtra("TERM"),translated_term, "ru");
+        trans.translateText(getIntent().getStringExtra("TERM"),translated_term, lang);
         boolean newItem = getIntent().getBooleanExtra("NEW", true);
         if (newItem) {
             HistoryItem item = new HistoryItem(term.getText().toString(), new Date().getTime());
@@ -94,16 +143,9 @@ public class TranslationActivity extends AppCompatActivity implements GoogleApiC
         ListView listview = (ListView) this.findViewById(R.id.association_list);
 
         try{
-            googlAutocompleteParser.urlReader(getIntent().getStringExtra("TERM"), listview, this);
+            googlAutocompleteParser.urlReader(getIntent().getStringExtra("TERM"), listview, this, lang);
         }
         catch(Exception e){}
-
-//        String country = getIntent().getStringExtra("COUNTRY");
-//        TextView tv = (TextView) findViewById(R.id.language);
-//        tv.setText(country);
-        //language_selector.setSelection((indexOfLanguage(getIntent().getStringExtra("LANGUAGE_SELECTED"))));
-        //set translated text to something
-        //make button take you to google search
     }
 
     private int indexOfLanguage(String language) {
