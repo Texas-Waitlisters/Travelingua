@@ -17,7 +17,7 @@ import java.io.*;
 public class googlAutocompleteParser {
 
 	public static Translate createTranslateService() {
-		return TranslateOptions.newBuilder().setApiKey("").build().getService();
+		return TranslateOptions.newBuilder().setApiKey("bde9fad2828e985c46899720766bc43abdc893ac").build().getService();
 	}
 
 	public static String translateText(String sourceText) {
