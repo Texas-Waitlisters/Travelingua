@@ -31,7 +31,10 @@ public class HistoryTab extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_history_tab, container, false);
 
-        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
+//        history = (ArrayList<HistoryItem>) HistoryItem.listAll(HistoryItem.class);
+        history = new ArrayList<HistoryItem>();
+        history.add(new HistoryItem("dsfa", 0));
+        history.add(new HistoryItem("lihjkm", 0));
 
 
 

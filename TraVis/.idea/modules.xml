@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TraVis.iml" filepath="$PROJECT_DIR$/TraVis.iml" />
-      <module fileurl="file://C:\Users\natha\AndroidStudioProjects\hackUTD\TraVis\TraVis.iml" filepath="C:\Users\natha\AndroidStudioProjects\hackUTD\TraVis\TraVis.iml" />
+      <module fileurl="file://C:/Users/natha/AndroidStudioProjects/hackUTD/TraVis/TraVis.iml" filepath="C:/Users/natha/AndroidStudioProjects/hackUTD/TraVis/TraVis.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\natha\AndroidStudioProjects\hackUTD\TraVis\app\app.iml" filepath="C:\Users\natha\AndroidStudioProjects\hackUTD\TraVis\app\app.iml" />
+      <module fileurl="file://C:/Users/natha/AndroidStudioProjects/hackUTD/TraVis/app/app.iml" filepath="C:/Users/natha/AndroidStudioProjects/hackUTD/TraVis/app/app.iml" />
     </modules>
   </component>
 </project>
